@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--
   ~ Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
@@ -15,9 +15,7 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
-  -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.carbon.uiserver</groupId>
@@ -343,7 +341,30 @@
                                 <outputDirectory>target/jacoco-reports</outputDirectory>
                             </configuration>
                         </execution>
-                    </executions>
+                    <execution>
+	<id>default-check</id>
+	<goals>
+		<goal>check</goal>
+	</goals>
+	<configuration>
+		<dataFile>target/jacoco.exec</dataFile>
+		<rules>
+			<!-- implementation is needed only for Maven 2 -->
+			<rule implementation="org.jacoco.maven.RuleConfiguration">
+				<element>BUNDLE</element>
+				<limits>
+					<!-- implementation is needed only for Maven 2 -->
+					<limit implementation="org.jacoco.report.check.Limit">
+						<counter>COMPLEXITY</counter>
+						<value>COVEREDRATIO</value>
+						<minimum>0.9</minimum>
+					</limit>
+				</limits>
+			</rule>
+		</rules>
+	</configuration>
+</execution>
+          </executions>
                 </plugin>
                 <!--TODO: Remove following skips ASAP-->
                 <plugin>
@@ -353,7 +374,15 @@
                         <skip>true</skip>
                     </configuration>
                 </plugin>
-            </plugins>
+            <plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-surefire-plugin</artifactId>
+	<version>2.21.0</version>
+	<configuration>
+	    <argLine>${argLine}</argLine>	
+	</configuration>
+</plugin>
+      </plugins>
         </pluginManagement>
     </build>
 
@@ -433,7 +462,7 @@
 
         <!-- Can't run tests from IntelliJ IDEA without this. -->
         <!-- One need to explicitly define this on bundle's pom.xml to add resources into its OSGi bundle. -->
-        <include.resource />
+        <include.resource/>
 
         <!-- Release plugin ID for GitHub-->
         <project.scm.id>github-scm</project.scm.id>
